@@ -38,7 +38,7 @@ create table produto(
     permite_observacoes boolean not null default false
 );
 
-insert into categorias(nome)
+insert into categoria(nome)
 values 
   ('Diversos'),
   ('Lanches'),
