@@ -1,9 +1,9 @@
 create database icubus;
 
-drop table if exists categoria;
-drop table if exists usuario;
-drop table if exists restaurante;
 drop table if exists produto;
+drop table if exists restaurante;
+drop table if exists usuario;
+drop table if exists categoria;
 
 create table categoria(
     id serial primary key,
@@ -37,3 +37,18 @@ create table produto(
     ativo boolean not null default true,
     permite_observacoes boolean not null default false
 );
+
+insert into categorias(nome)
+values 
+  ('Diversos'),
+  ('Lanches'),
+  ('Carnes'), 
+  ('Massas'),
+  ('Pizzas'),
+  ('Japonesa'),
+  ('Chinesa'),
+  ('Mexicano'),
+  ('Brasileira'),
+  ('Italiana'),
+  ('Árabe')
+;
