@@ -23,6 +23,14 @@ async function verificaLogin(req, res, next) {
 
         req.usuario = usuario;
 
+        const restaurante = await knex('restaurante').where({ usuario_id: id }).first();
+        
+        if(!restaurante) {
+            return res.status(404).json('Restaurante não encontrado');
+        }
+
+        req.restaurante = restaurante;
+
         next();
 
     } catch (error) {
