@@ -5,7 +5,7 @@ async function verificaLogin(req, res, next) {
     const { authorization } = req.headers;
 
     if(!authorization){
-        return res.status(401).json('Não autorizado');
+        return res.status(401).json('Não autorizado. Recomenda-se fazer login');
     }
 
     try {

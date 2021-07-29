@@ -42,7 +42,7 @@ async function cadastrarUsuario(req, res){
             return res.status(400).json('Não foi possível cadastrar o restaurante');
         }
 
-        return res.status(200).json('Usuário e restaurante cadastrados com sucesso.');
+        return res.status(201).json('Usuário e restaurante cadastrados com sucesso.');
    
     } catch (error) {
         return res.status(400).json(error.message);

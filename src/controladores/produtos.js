@@ -1,5 +1,5 @@
 const knex = require('../bancodedados/conexao');
-const cadastroProdutoSquema = require('../validacoes/cadastroProdutoSquema');
+const { produtoSquema, editarProdutoSquema } = require('../validacoes/cadastroProdutoSquema');
 const idParamsSquema = require('../validacoes/idParamsSquema');
 
 async function listarProdutosRestaurante (req, res) {
@@ -42,7 +42,7 @@ async function cadastrarProduto (req, res){
     const { nome, preco, descricao, permiteObservacoes } = req.body;
     
     try {
-        await cadastroProdutoSquema.validate(req.body);
+        await produtoSquema.validate(req.body);
         
         const valores = {
             restaurante_id: restaurante.id,
@@ -68,7 +68,38 @@ async function cadastrarProduto (req, res){
             return res.status(400).json('O produto não foi cadastrado');
         }
 
-        return res.status(200).json('O produto foi cadastrado com sucesso.');
+        return res.status(201).json('O produto foi cadastrado com sucesso.');
+    } catch (error) {
+        return res.status(400).json(error.message);
+    }
+}
+
+async function editarTudoProduto (req, res) {
+    const { restaurante } = req;
+    const { id: idProduto } = req.params;
+    const { nome, preco, descricao, permiteObservacoes } = req.body;
+
+    try {
+        await produtoSquema.validate(req.body);
+
+        const produto = await knex('produto')
+            .where({ restaurante_id: restaurante.id, id: idProduto })
+            .first();
+
+        if (!produto) {
+            return res.status(404).json('Produto não encontrado');
+        }
+
+        const produtoAtualizado = await knex('produto')
+            .update({ nome, preco, descricao, permite_observacoes: permiteObservacoes })
+            .where({ restaurante_id: restaurante.id, id: idProduto });
+    
+
+        if (!produtoAtualizado) {
+            return res.status(400).json('O produto não foi atualizado');
+        }
+
+        return res.status(200).json('O produto foi atualizado com sucesso');
     } catch (error) {
         return res.status(400).json(error.message);
     }
@@ -84,6 +115,8 @@ async function editarProduto (req, res) {
     }
 
     try {
+        await editarProdutoSquema.validate(req.body);
+
         const produto = await knex('produto')
             .where({ restaurante_id: restaurante.id, id: idProduto })
             .first();
@@ -137,7 +170,7 @@ async function excluirProduto (req, res) {
             return res.status(400).json('O produto não foi excluido');
         }
 
-        return res.status(200).json('Produto excluido com sucesso');
+        return res.status(204).json('Produto excluido com sucesso');
     } catch (error) {
         return res.status(400).json(error.message);
     }
@@ -205,6 +238,7 @@ module.exports = {
     listarProdutosRestaurante,
     obterProduto,
     cadastrarProduto,
+    editarTudoProduto,
     editarProduto,
     excluirProduto,
     ativarProduto,

@@ -1,10 +1,20 @@
 const yup = require('./yup');
 
-const cadastroProdutoSquema = yup.object().shape({
+const produtoSquema = yup.object().shape({
     nome: yup.string().max(50).required(),
     descricao: yup.string().max(100),
-    preco: yup.number().integer().required(),
+    preco: yup.number().integer().positive().required(),
     permiteObservacoes: yup.boolean() 
-})
+});
 
-module.exports = cadastroProdutoSquema;
+const editarProdutoSquema = yup.object().shape({
+    nome: yup.string().max(50),
+    descricao: yup.string().max(100),
+    preco: yup.number().integer().positive(),
+    permiteObservacoes: yup.boolean() 
+});
+
+module.exports = {
+    produtoSquema,
+    editarProdutoSquema
+};
