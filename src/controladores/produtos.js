@@ -38,26 +38,27 @@ async function obterProduto (req, res) {
 }
 
 async function cadastrarProduto (req, res){
-    const { restaurante } = req;
+    const { restaurante, usuario } = req;
     const { nome, preco, descricao, permiteObservacoes } = req.body;
-    
+    console.log(restaurante, usuario);
     try {
         await produtoSquema.validate(req.body);
         
+        const produtoExistente = await knex('produto')
+            .where({ restaurante_id: restaurante.id})
+            .andWhere('nome', 'ilike', `${nome}`)
+            .first();
+    
+        if (produtoExistente) {
+            return res.status(400).json('Já existe produto cadastrado com esse nome');
+        }
+
         const valores = {
             restaurante_id: restaurante.id,
             nome,
             descricao,
             preco,
             permite_observacoes: permiteObservacoes
-        }
-
-        const produtoExistente = await knex('produto')
-            .where('nome', 'ilike', `${nome}`)
-            .first();
-    
-        if (produtoExistente) {
-            return res.status(400).json('Já existe produto cadastrado com esse nome');
         }
 
         const produto = await knex('produto')
@@ -88,6 +89,15 @@ async function editarTudoProduto (req, res) {
 
         if (!produto) {
             return res.status(404).json('Produto não encontrado');
+        }
+
+        const produtoExistente = await knex('produto')
+            .where({ restaurante_id: restaurante.id})
+            .andWhere('nome', 'ilike', `${nome}`)
+            .first();
+
+        if (produtoExistente) {
+            return res.status(400).json('Já existe produto cadastrado com esse nome');
         }
 
         const produtoAtualizado = await knex('produto')
@@ -123,6 +133,15 @@ async function editarProduto (req, res) {
 
         if (!produto) {
             return res.status(404).json('Produto não encontrado');
+        }
+
+        const produtoExistente = await knex('produto')
+            .where({ restaurante_id: restaurante.id})
+            .andWhere('nome', 'ilike', `${nome}`)
+            .first();
+
+        if (produtoExistente) {
+            return res.status(400).json('Já existe produto cadastrado com esse nome');
         }
 
         const produtoAtualizado = await knex('produto')
