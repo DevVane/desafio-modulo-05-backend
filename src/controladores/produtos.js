@@ -172,7 +172,8 @@ async function excluirProduto (req, res) {
         }
 
         const produtoAtivo = await knex('produto')
-            .where({ restaurante_id: restaurante.id, id: idProduto, ativo: true });
+            .where({ restaurante_id: restaurante.id, id: idProduto, ativo: true })
+            .first();
 
         if (produtoAtivo) {
             return res.status(400).json('Não é possível excluir um produto ativo');
@@ -186,7 +187,7 @@ async function excluirProduto (req, res) {
             return res.status(400).json('O produto não foi excluido');
         }
 
-        return res.status(204).json('Produto excluido com sucesso');
+        return res.status(200).json('Produto excluido com sucesso');
     } catch (error) {
         return res.status(400).json(error.message);
     }
