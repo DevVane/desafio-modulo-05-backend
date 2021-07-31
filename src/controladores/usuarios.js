@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 const knex = require('../bancodedados/conexao');
-const { usuarioSquema, restauranteSquema } = require('../validacoes/cadastroUsuarioSquema');
+const { usuarioSquema, restauranteSquema } = require('../validacoes/usuarioSquema');
 
 async function cadastrarUsuario(req, res){
     const { nome, email, senha} = req.body;

@@ -1,5 +1,5 @@
 const knex = require('../bancodedados/conexao');
-const { produtoSquema, editarProdutoSquema } = require('../validacoes/cadastroProdutoSquema');
+const { produtoSquema, editarProdutoSquema } = require('../validacoes/produtoSquema');
 const idParamsSquema = require('../validacoes/idParamsSquema');
 
 async function listarProdutosRestaurante (req, res) {
@@ -38,9 +38,9 @@ async function obterProduto (req, res) {
 }
 
 async function cadastrarProduto (req, res){
-    const { restaurante, usuario } = req;
+    const { restaurante } = req;
     const { nome, preco, descricao, permiteObservacoes } = req.body;
-    console.log(restaurante, usuario);
+    
     try {
         await produtoSquema.validate(req.body);
         
@@ -115,14 +115,11 @@ async function editarTudoProduto (req, res) {
     }
 }
 
+//TO DO: melhorar validações
 async function editarProduto (req, res) {
     const { restaurante } = req;
     const { id: idProduto } = req.params;
     const { nome, preco, descricao, permiteObservacoes } = req.body;
-
-    if (!nome && !preco && !descricao && !permiteObservacoes) {
-        return res.status(404).json('Informe ao menos um campo para atualizaçao do produto');
-    }
 
     try {
         await editarProdutoSquema.validate(req.body);
