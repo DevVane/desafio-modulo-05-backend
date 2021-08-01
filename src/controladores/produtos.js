@@ -48,7 +48,7 @@ async function cadastrarProduto (req, res){
             .where({ restaurante_id: restaurante.id})
             .andWhere('nome', 'ilike', `${nome}`)
             .first();
-    
+
         if (produtoExistente) {
             return res.status(400).json('Já existe produto cadastrado com esse nome');
         }
@@ -96,7 +96,7 @@ async function editarTudoProduto (req, res) {
             .andWhere('nome', 'ilike', `${nome}`)
             .first();
 
-        if (produtoExistente) {
+        if (produtoExistente !== produto.nome) {
             return res.status(400).json('Já existe produto cadastrado com esse nome');
         }
 
@@ -137,7 +137,7 @@ async function editarProduto (req, res) {
             .andWhere('nome', 'ilike', `${nome}`)
             .first();
 
-        if (produtoExistente) {
+        if (produtoExistente !== produto.nome) {
             return res.status(400).json('Já existe produto cadastrado com esse nome');
         }
 
