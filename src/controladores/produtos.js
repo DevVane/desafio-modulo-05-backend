@@ -91,15 +91,6 @@ async function editarTudoProduto (req, res) {
             return res.status(404).json('Produto não encontrado');
         }
 
-        const produtoExistente = await knex('produto')
-            .where({ restaurante_id: restaurante.id})
-            .andWhere('nome', 'ilike', `${nome}`)
-            .first();
-
-        if (produtoExistente !== produto.nome) {
-            return res.status(400).json('Já existe produto cadastrado com esse nome');
-        }
-
         const produtoAtualizado = await knex('produto')
             .update({ nome, preco, descricao, permite_observacoes: permiteObservacoes })
             .where({ restaurante_id: restaurante.id, id: idProduto });
@@ -130,15 +121,6 @@ async function editarProduto (req, res) {
 
         if (!produto) {
             return res.status(404).json('Produto não encontrado');
-        }
-
-        const produtoExistente = await knex('produto')
-            .where({ restaurante_id: restaurante.id})
-            .andWhere('nome', 'ilike', `${nome}`)
-            .first();
-
-        if (produtoExistente !== produto.nome) {
-            return res.status(400).json('Já existe produto cadastrado com esse nome');
         }
 
         const produtoAtualizado = await knex('produto')
