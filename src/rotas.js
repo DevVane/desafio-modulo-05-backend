@@ -4,6 +4,7 @@ const usuarios = require('./controladores/usuarios');
 const verificaLogin = require('./filtros/verificaLogin');
 const loginControlador = require('./controladores/login');
 const produtos = require('./controladores/produtos');
+const categorias = require('./controladores/categorias');
 
 const rotas = express();
 
@@ -12,6 +13,9 @@ rotas.post('/usuarios', usuarios.cadastrarUsuario);
 
 //login
 rotas.post('/login', loginControlador.logarUsuario);
+
+//categoria
+rotas.get('/categorias', categorias.listarCategorias);
 
 //filtro pra verificar se usuário ta logado
 rotas.use(verificaLogin);
