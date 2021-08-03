@@ -5,6 +5,7 @@ const verificaLogin = require('./filtros/verificaLogin');
 const loginControlador = require('./controladores/login');
 const produtos = require('./controladores/produtos');
 const categorias = require('./controladores/categorias');
+const perfil = require('./controladores/perfil');
 
 const rotas = express();
 
@@ -20,6 +21,10 @@ rotas.get('/categorias/:id', categorias.obterCategoria);
 
 //filtro pra verificar se usuário ta logado
 rotas.use(verificaLogin);
+
+//perfil
+rotas.get('/perfil', perfil.obterPerfil);
+rotas.put('/perfil', perfil.atualizarPerfil);
 
 //produtos
 rotas.get('/produtos', produtos.listarProdutosRestaurante);
