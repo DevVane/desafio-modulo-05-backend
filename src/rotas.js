@@ -14,8 +14,9 @@ rotas.post('/usuarios', usuarios.cadastrarUsuario);
 //login
 rotas.post('/login', loginControlador.logarUsuario);
 
-//categoria
+//categorias
 rotas.get('/categorias', categorias.listarCategorias);
+rotas.get('/categorias/:id', categorias.obterCategoria);
 
 //filtro pra verificar se usuário ta logado
 rotas.use(verificaLogin);
