@@ -39,7 +39,7 @@ async function obterProduto (req, res) {
 
 async function cadastrarProduto (req, res){
     const { restaurante } = req;
-    const { nome, preco, descricao, permiteObservacoes } = req.body;
+    const { nome, preco, descricao, permiteObservacoes, ativo } = req.body;
     
     try {
         await produtoSquema.validate(req.body);
@@ -56,9 +56,10 @@ async function cadastrarProduto (req, res){
         const valores = {
             restaurante_id: restaurante.id,
             nome,
-            descricao,
             preco,
-            permite_observacoes: permiteObservacoes
+            descricao,
+            permite_observacoes: permiteObservacoes,
+            ativo
         }
 
         const produto = await knex('produto')
@@ -78,7 +79,7 @@ async function cadastrarProduto (req, res){
 async function editarTudoProduto (req, res) {
     const { restaurante } = req;
     const { id: idProduto } = req.params;
-    const { nome, preco, descricao, permiteObservacoes } = req.body;
+    const { nome, preco, descricao, permiteObservacoes, ativo } = req.body;
 
     try {
         await produtoSquema.validate(req.body);
@@ -92,7 +93,7 @@ async function editarTudoProduto (req, res) {
         }
 
         const produtoAtualizado = await knex('produto')
-            .update({ nome, preco, descricao, permite_observacoes: permiteObservacoes })
+            .update({ nome, preco, descricao, permite_observacoes: permiteObservacoes, ativo })
             .where({ restaurante_id: restaurante.id, id: idProduto });
     
 
@@ -110,7 +111,7 @@ async function editarTudoProduto (req, res) {
 async function editarProduto (req, res) {
     const { restaurante } = req;
     const { id: idProduto } = req.params;
-    const { nome, preco, descricao, permiteObservacoes } = req.body;
+    const { nome, preco, descricao, permiteObservacoes, ativo } = req.body;
 
     try {
         await editarProdutoSquema.validate(req.body);
@@ -124,7 +125,7 @@ async function editarProduto (req, res) {
         }
 
         const produtoAtualizado = await knex('produto')
-            .update({ nome, preco, descricao, permite_observacoes: permiteObservacoes })
+            .update({ nome, preco, descricao, permite_observacoes: permiteObservacoes, ativo })
             .where({ restaurante_id: restaurante.id, id: idProduto });
     
 
