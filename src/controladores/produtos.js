@@ -92,7 +92,9 @@ async function cadastrarProduto (req, res){
 async function editarTudoProduto (req, res) {
     const { restaurante } = req;
     const { id: idProduto } = req.params;
-    const { nome, preco, descricao, permiteObservacoes, ativo } = req.body;
+    const { nome, preco, descricao, permiteObservacoes, ativo, nomeImagem, imagem } = req.body;
+
+    let imagemUrl;
 
     try {
         await produtoSquema.validate(req.body);
@@ -105,8 +107,25 @@ async function editarTudoProduto (req, res) {
             return res.status(404).json('Produto não encontrado');
         }
 
+        if( imagem ) {
+            const response = await uploadImagem(nomeImagem, imagem);
+
+            if( !response.erro ) {
+                imagemUrl = response;
+            }
+        }
+
+        const valoresAtualizados = {
+            nome,
+            preco,
+            descricao,
+            permite_observacoes: permiteObservacoes,
+            ativo,
+            imagem: imagemUrl
+        }
+
         const produtoAtualizado = await knex('produto')
-            .update({ nome, preco, descricao, permite_observacoes: permiteObservacoes, ativo })
+            .update(valoresAtualizados)
             .where({ restaurante_id: restaurante.id, id: idProduto });
     
 
@@ -123,8 +142,10 @@ async function editarTudoProduto (req, res) {
 async function editarProduto (req, res) {
     const { restaurante } = req;
     const { id: idProduto } = req.params;
-    const { nome, preco, descricao, permiteObservacoes, ativo } = req.body;
+    const { nome, preco, descricao, permiteObservacoes, ativo, nomeImagem, imagem } = req.body;
 
+    let imagemUrl;
+    
     try {
         await editarProdutoSquema.validate(req.body);
 
@@ -136,8 +157,25 @@ async function editarProduto (req, res) {
             return res.status(404).json('Produto não encontrado');
         }
 
+        if( imagem ) {
+            const response = await uploadImagem(nomeImagem, imagem);
+
+            if( !response.erro ) {
+                imagemUrl = response;
+            }
+        }
+
+        const valoresAtualizados = {
+            nome,
+            preco,
+            descricao,
+            permite_observacoes: permiteObservacoes,
+            ativo,
+            imagem: imagemUrl
+        }
+
         const produtoAtualizado = await knex('produto')
-            .update({ nome, preco, descricao, permite_observacoes: permiteObservacoes, ativo })
+            .update(valoresAtualizados)
             .where({ restaurante_id: restaurante.id, id: idProduto });
     
 
