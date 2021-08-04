@@ -1,15 +1,18 @@
 const bcrypt = require('bcrypt');
 const knex = require('../bancodedados/conexao');
 const { usuarioSquema, restauranteSquema } = require('../validacoes/usuarioSquema');
+const { uploadImagem }= require('../funcoes/upload');
 
 async function cadastrarUsuario(req, res){
     const { nome, email, senha} = req.body;
+
+    let imagemUrl;
     
     try {
         await usuarioSquema.validate(req.body);
         await restauranteSquema.validate(req.body.restaurante);
         
-        const { nome: nomeRestaurante, descricao, idCategoria, taxaEntrega, tempoEntregaEmMinutos, valorMinimoPedido} = req.body.restaurante;
+        const { nome: nomeRestaurante, descricao, idCategoria, taxaEntrega, tempoEntregaEmMinutos, valorMinimoPedido, nomeImagem, imagem} = req.body.restaurante;
 
         const emailEncontrado = await knex('usuario').where({ email }).first();
 
@@ -24,6 +27,14 @@ async function cadastrarUsuario(req, res){
         if (!usuario) {
             return res.status(400).json('Não foi possível cadastrar o usuário');
         }
+
+        if( imagem ) {
+            const response = await uploadImagem(nomeImagem, imagem);
+
+            if( !response.erro ) {
+                imagemUrl = response;
+            }
+        }
         
         const restauranteCadastrado = await knex('restaurante')
             .insert({ 
@@ -33,7 +44,8 @@ async function cadastrarUsuario(req, res){
                 categoria_id: idCategoria, 
                 taxa_entrega: taxaEntrega, 
                 tempo_entrega_minutos: tempoEntregaEmMinutos, 
-                valor_minimo_pedido: valorMinimoPedido
+                valor_minimo_pedido: valorMinimoPedido,
+                imagem: imagemUrl
             });
             
         if(!restauranteCadastrado) {
