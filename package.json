@@ -6,7 +6,6 @@
   "scripts": {
     "dev": "nodemon ./src/index.js",
     "start": "node ./src/index.js"
-
   },
   "repository": {
     "type": "git",
@@ -20,6 +19,7 @@
   },
   "homepage": "https://github.com/DevVane/desafio-modulo-05-backend#readme",
   "dependencies": {
+    "@supabase/supabase-js": "^1.21.0",
     "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",

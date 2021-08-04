@@ -1,6 +1,8 @@
 const knex = require('../bancodedados/conexao');
 const { produtoSquema, editarProdutoSquema } = require('../validacoes/produtoSquema');
 const idParamsSquema = require('../validacoes/idParamsSquema');
+const { uploadImagem }= require('../funcoes/upload');
+
 
 async function listarProdutosRestaurante (req, res) {
     const { restaurante } = req;
@@ -39,7 +41,9 @@ async function obterProduto (req, res) {
 
 async function cadastrarProduto (req, res){
     const { restaurante } = req;
-    const { nome, preco, descricao, permiteObservacoes, ativo } = req.body;
+    const { nome, preco, descricao, permiteObservacoes, ativo, nomeImagem, imagem } = req.body;
+    
+    let imagemUrl;
     
     try {
         await produtoSquema.validate(req.body);
@@ -53,13 +57,22 @@ async function cadastrarProduto (req, res){
             return res.status(400).json('Já existe produto cadastrado com esse nome');
         }
 
+        if( imagem ) {
+            const response = await uploadImagem(nomeImagem, imagem);
+
+            if( !response.erro ) {
+                imagemUrl = response;
+            }
+        }
+
         const valores = {
             restaurante_id: restaurante.id,
             nome,
             preco,
             descricao,
             permite_observacoes: permiteObservacoes,
-            ativo
+            ativo,
+            imagem: imagemUrl
         }
 
         const produto = await knex('produto')
@@ -107,7 +120,6 @@ async function editarTudoProduto (req, res) {
     }
 }
 
-//TO DO: melhorar validações
 async function editarProduto (req, res) {
     const { restaurante } = req;
     const { id: idProduto } = req.params;
