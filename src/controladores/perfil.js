@@ -1,6 +1,6 @@
 const knex = require('../bancodedados/conexao');
 const bcrypt = require('bcrypt');
-const { usuarioSquema, restauranteSquema } = require('../validacoes/usuarioSquema');
+const { usuarioSquema, usuarioEditarSquema, restauranteSquema } = require('../validacoes/usuarioSquema');
 const { uploadImagem }= require('../funcoes/upload');
 
 
@@ -16,7 +16,7 @@ async function atualizarPerfil(req, res){
     const { nome, email, senha} = req.body;
 
     try {
-        await usuarioSquema.validate(req.body);
+        await usuarioEditarSquema.validate(req.body);
         await restauranteSquema.validate(req.body.restaurante);
 
         const senhaCriptografada = await bcrypt.hash(senha, 10);

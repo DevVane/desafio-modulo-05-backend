@@ -27,7 +27,7 @@ create table restaurante(
     taxa_entrega integer not null default 0,
     tempo_entrega_minutos integer not null default 30,
     valor_minimo_pedido integer not null default 0,
-  	imagem  text default 'https://cmrhxoylmbmyrjjylqnw.supabase.in/storage/v1/object/public/icubus/default/semfoto.jpg'
+  	imagem  text default 'https://cmrhxoylmbmyrjjylqnw.supabase.in/storage/v1/object/public/icubus/default/semfoto.jpg',
   	nome_imagem text default 'default/semfoto.jpg'
 );
 
@@ -39,7 +39,7 @@ create table produto(
     preco integer not null,
     ativo boolean not null default true,
     permite_observacoes boolean not null default false,
-  	imagem text default 'https://cmrhxoylmbmyrjjylqnw.supabase.in/storage/v1/object/public/icubus/default/addFotoProduto.jpg'
+  	imagem text default 'https://cmrhxoylmbmyrjjylqnw.supabase.in/storage/v1/object/public/icubus/default/addFotoProduto.jpg',
   	nome_imagem text default 'default/addFotoProduto.jpg'
 );
 
