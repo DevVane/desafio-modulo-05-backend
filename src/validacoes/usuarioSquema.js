@@ -12,7 +12,9 @@ const restauranteSquema = yup.object().shape({
     idCategoria: yup.number().integer().positive().required(), 
     taxaEntrega: yup.number().integer().required(), 
     tempoEntregaEmMinutos: yup.number().integer().required(), 
-    valorMinimoPedido: yup.number().integer().required()   
+    valorMinimoPedido: yup.number().integer().required(),
+    imagem: yup.string().trim(),
+    nomeImagem: yup.string().trim()   
 })
 
 module.exports = {

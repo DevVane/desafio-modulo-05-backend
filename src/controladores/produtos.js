@@ -72,6 +72,7 @@ async function cadastrarProduto (req, res){
             descricao,
             permite_observacoes: permiteObservacoes,
             ativo,
+            nome_imagem: nomeImagem,
             imagem: imagemUrl
         }
 
@@ -107,10 +108,10 @@ async function editarTudoProduto (req, res) {
             return res.status(404).json('Produto não encontrado');
         }
 
-        if( imagem ) {
+        if (imagem) {
             const response = await uploadImagem(nomeImagem, imagem);
 
-            if( !response.erro ) {
+            if (!response.erro) {
                 imagemUrl = response;
             }
         }
@@ -121,6 +122,7 @@ async function editarTudoProduto (req, res) {
             descricao,
             permite_observacoes: permiteObservacoes,
             ativo,
+            nome_imagem: nomeImagem,
             imagem: imagemUrl
         }
 
@@ -157,10 +159,10 @@ async function editarProduto (req, res) {
             return res.status(404).json('Produto não encontrado');
         }
 
-        if( imagem ) {
+        if (imagem) {
             const response = await uploadImagem(nomeImagem, imagem);
 
-            if( !response.erro ) {
+            if (!response.erro) {
                 imagemUrl = response;
             }
         }
@@ -171,6 +173,7 @@ async function editarProduto (req, res) {
             descricao,
             permite_observacoes: permiteObservacoes,
             ativo,
+            nome_imagem: nomeImagem,
             imagem: imagemUrl
         }
 

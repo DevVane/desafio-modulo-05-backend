@@ -23,9 +23,7 @@ async function atualizarPerfil(req, res){
 
         const usuarioAtualizado = await knex('usuario')
             .update({ nome, email, senha: senhaCriptografada})
-            .where({ id: usuarioId })
-
-        console.log(usuarioAtualizado);
+            .where({ id: usuarioId });
 
         if (!usuarioAtualizado) {
             return res.status(400).json('Não foi possível atualizar o usuário');
@@ -38,7 +36,7 @@ async function atualizarPerfil(req, res){
             taxaEntrega, 
             tempoEntregaEmMinutos, 
             valorMinimoPedido, 
-            nomeImagem, 
+            nomeImagem,
             imagem
         } = req.body.restaurante;
 
@@ -47,7 +45,7 @@ async function atualizarPerfil(req, res){
         if (imagem) {
             const response = await uploadImagem(nomeImagem, imagem);
 
-            if( !response.erro ) {
+            if (!response.erro) {
                 imagemUrl = response;
             }
         }
@@ -61,15 +59,14 @@ async function atualizarPerfil(req, res){
                 taxa_entrega: taxaEntrega, 
                 tempo_entrega_minutos: tempoEntregaEmMinutos, 
                 valor_minimo_pedido: valorMinimoPedido,
+                nome_imagem: nomeImagem,
                 imagem: imagemUrl
             })
             .where({ id: restauranteId });
            
-            
-        console.log(restauranteAtualizado);
 
         if(!restauranteAtualizado) {
-            await knex('usuario').del().where({ id: usuario[0].id });
+            await knex('usuario').del().where({ id: usuarioId });
 
             return res.status(400).json('Não foi possível atualizar o restaurante');
         }

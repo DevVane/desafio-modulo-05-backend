@@ -33,14 +33,14 @@ async function cadastrarUsuario(req, res){
             taxaEntrega, 
             tempoEntregaEmMinutos, 
             valorMinimoPedido, 
-            nomeImagem, 
-            imagem
+            imagem,
+            nomeImagem
         } = req.body.restaurante;
 
         if (imagem) {
             const response = await uploadImagem(nomeImagem, imagem);
 
-            if( !response.erro ) {
+            if (!response.erro) {
                 imagemUrl = response;
             }
         }
@@ -54,7 +54,8 @@ async function cadastrarUsuario(req, res){
                 taxa_entrega: taxaEntrega, 
                 tempo_entrega_minutos: tempoEntregaEmMinutos, 
                 valor_minimo_pedido: valorMinimoPedido,
-                imagem: imagemUrl
+                imagem: imagemUrl,
+                nome_imagem: nomeImagem
             });
             
         if(!restauranteCadastrado) {
