@@ -11,8 +11,6 @@ async function cadastrarUsuario(req, res){
     try {
         await usuarioSquema.validate(req.body);
         await restauranteSquema.validate(req.body.restaurante);
-        
-        const { nome: nomeRestaurante, descricao, idCategoria, taxaEntrega, tempoEntregaEmMinutos, valorMinimoPedido, nomeImagem, imagem} = req.body.restaurante;
 
         const emailEncontrado = await knex('usuario').where({ email }).first();
 
@@ -28,7 +26,18 @@ async function cadastrarUsuario(req, res){
             return res.status(400).json('Não foi possível cadastrar o usuário');
         }
 
-        if( imagem ) {
+        const { 
+            nome: nomeRestaurante, 
+            descricao, 
+            idCategoria, 
+            taxaEntrega, 
+            tempoEntregaEmMinutos, 
+            valorMinimoPedido, 
+            nomeImagem, 
+            imagem
+        } = req.body.restaurante;
+
+        if (imagem) {
             const response = await uploadImagem(nomeImagem, imagem);
 
             if( !response.erro ) {

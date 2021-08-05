@@ -57,7 +57,7 @@ async function cadastrarProduto (req, res){
             return res.status(400).json('Já existe produto cadastrado com esse nome');
         }
 
-        if( imagem ) {
+        if (imagem) {
             const response = await uploadImagem(nomeImagem, imagem);
 
             if( !response.erro ) {
