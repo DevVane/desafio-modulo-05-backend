@@ -13,13 +13,23 @@ async function obterPerfil(req, res){
 async function atualizarPerfil(req, res){
     const { id: usuarioId } = req.usuario;
     const { id: restauranteId } = req.restaurante;
-    const { nome, email, senha} = req.body;
+    const { nome, email} = req.body;
+    let { senha } = req.body;
+
 
     try {
         await usuarioEditarSquema.validate(req.body);
         await restauranteSquema.validate(req.body.restaurante);
 
-        const senhaCriptografada = await bcrypt.hash(senha, 10);
+        let senhaCriptografada;
+
+        usuario = await knex('usuario').where({ id: usuarioId }).first();
+
+        if(!senha) {
+            senhaCriptografada = usuario.senha;
+        } else {
+            senhaCriptografada = await bcrypt.hash(senha, 10);
+        }
 
         const usuarioAtualizado = await knex('usuario')
             .update({ nome, email, senha: senhaCriptografada})
