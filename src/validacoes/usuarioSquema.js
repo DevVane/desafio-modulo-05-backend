@@ -25,5 +25,6 @@ const restauranteSquema = yup.object().shape({
 
 module.exports = {
     usuarioSquema,
+    usuarioEditarSquema,
     restauranteSquema
 };
