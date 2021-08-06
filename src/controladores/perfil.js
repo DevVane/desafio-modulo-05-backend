@@ -31,6 +31,12 @@ async function atualizarPerfil(req, res){
             senhaCriptografada = await bcrypt.hash(senha, 10);
         }
 
+        const emailEncontrado = await knex('usuario').where({ email }).first();
+        
+        if (emailEncontrado.id != usuarioId) {
+            return res.status(400).json('Já existe usuário cadastrado com esse email');
+        }
+
         const usuarioAtualizado = await knex('usuario')
             .update({ nome, email, senha: senhaCriptografada})
             .where({ id: usuarioId });
