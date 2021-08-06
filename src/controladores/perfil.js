@@ -33,7 +33,7 @@ async function atualizarPerfil(req, res){
 
         const emailEncontrado = await knex('usuario').where({ email }).first();
         
-        if (emailEncontrado.id != usuarioId) {
+        if (emailEncontrado && (emailEncontrado.id != usuarioId)) {
             return res.status(400).json('Já existe usuário cadastrado com esse email');
         }
 
