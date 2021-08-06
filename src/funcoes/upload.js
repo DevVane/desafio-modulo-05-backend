@@ -3,7 +3,7 @@ const supabase = require('../servicos/supabase');
 async function uploadImagem (nomeImagem, imagem) {
     const buffer = Buffer.from(imagem, 'base64');
 
-    let resposta = [];
+    let resposta = {};
 
     try {
         const {  error } = await supabase
@@ -12,7 +12,8 @@ async function uploadImagem (nomeImagem, imagem) {
             .upload(nomeImagem, buffer);
 
         if (error) {
-            return resposta.erro = error.message;
+            resposta = { erro: error.message };
+            return resposta;
         }
 
         const { publicURL, error: errorPublicUrl} = supabase
@@ -21,13 +22,15 @@ async function uploadImagem (nomeImagem, imagem) {
             .getPublicUrl(nomeImagem);
 
         if (errorPublicUrl) {
-            return resposta.erro = errorPublicUrl.message;
+            resposta = { erro: errorPublicUrl.message };
+            return resposta;
         }
 
-        return resposta.imagemUrl = publicURL;
+        resposta = { data: publicURL};
+        return resposta;
         
     } catch (error) {
-        return resposta.erro = error.message;
+        return resposta = { erro: error.message };
     }
 }
 

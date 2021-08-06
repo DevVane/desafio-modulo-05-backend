@@ -8,7 +8,7 @@ drop table if exists categoria;
 create table categoria(
     id serial primary key,
     nome varchar(30) not null,
-	  imagem text
+	imagem text
 );
 
 create table usuario(
@@ -39,8 +39,9 @@ create table produto(
     preco integer not null,
     ativo boolean not null default true,
     permite_observacoes boolean not null default false,
-  	imagem text default 'https://cmrhxoylmbmyrjjylqnw.supabase.in/storage/v1/object/public/icubus/default/addFotoProduto.jpg',
-  	nome_imagem text default 'default/addFotoProduto.jpg'
+  	imagem text default 'https://cmrhxoylmbmyrjjylqnw.supabase.in/storage/v1/object/public/icubus/default/addFotoProduto.png',
+  	nome_imagem text default 'default/addFotoProduto.png'
+  
 );
 
 insert into categoria(nome, imagem)

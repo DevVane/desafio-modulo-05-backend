@@ -58,11 +58,13 @@ async function cadastrarProduto (req, res){
         }
 
         if (imagem) {
-            const response = await uploadImagem(nomeImagem, imagem);
-
-            if( !response.erro ) {
-                imagemUrl = response;
+            const { erro, data } = await uploadImagem(nomeImagem, imagem);
+            
+            if (!data) {
+                return res.status(400).json(erro);   
             }
+
+            imagemUrl = data;
         }
 
         const valores = {
@@ -109,11 +111,13 @@ async function editarTudoProduto (req, res) {
         }
 
         if (imagem) {
-            const response = await uploadImagem(nomeImagem, imagem);
-
-            if (!response.erro) {
-                imagemUrl = response;
+            const { erro, data } = await uploadImagem(nomeImagem, imagem);
+            
+            if (!data) {
+                return res.status(400).json(erro);   
             }
+
+            imagemUrl = data;
         }
 
         const valoresAtualizados = {
@@ -160,11 +164,13 @@ async function editarProduto (req, res) {
         }
 
         if (imagem) {
-            const response = await uploadImagem(nomeImagem, imagem);
-
-            if (!response.erro) {
-                imagemUrl = response;
+            const { erro, data } = await uploadImagem(nomeImagem, imagem);
+            
+            if (!data) {
+                return res.status(400).json(erro);   
             }
+
+            imagemUrl = data;
         }
 
         const valoresAtualizados = {

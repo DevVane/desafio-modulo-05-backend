@@ -1,6 +1,6 @@
 const knex = require('../bancodedados/conexao');
 const bcrypt = require('bcrypt');
-const { usuarioSquema, usuarioEditarSquema, restauranteSquema } = require('../validacoes/usuarioSquema');
+const { usuarioEditarSquema, restauranteSquema } = require('../validacoes/usuarioSquema');
 const { uploadImagem }= require('../funcoes/upload');
 
 
@@ -43,11 +43,13 @@ async function atualizarPerfil(req, res){
         let imagemUrl;
 
         if (imagem) {
-            const response = await uploadImagem(nomeImagem, imagem);
-
-            if (!response.erro) {
-                imagemUrl = response;
+            const { erro, data } = await uploadImagem(nomeImagem, imagem);
+            
+            if (!data) {
+                return res.status(400).json(erro);   
             }
+
+            imagemUrl = data;
         }
         
         const restauranteAtualizado = await knex('restaurante')

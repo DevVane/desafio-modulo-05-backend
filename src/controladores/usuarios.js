@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 const knex = require('../bancodedados/conexao');
-const { usuarioSquema, restauranteSquema } = require('../validacoes/usuarioSquema');
+const { usuarioSquema,  restauranteSquema } = require('../validacoes/usuarioSquema');
 const { uploadImagem }= require('../funcoes/upload');
 
 async function cadastrarUsuario(req, res){
@@ -38,11 +38,13 @@ async function cadastrarUsuario(req, res){
         } = req.body.restaurante;
 
         if (imagem) {
-            const response = await uploadImagem(nomeImagem, imagem);
-
-            if (!response.erro) {
-                imagemUrl = response;
+            const { erro, data } = await uploadImagem(nomeImagem, imagem);
+            
+            if (!data) {
+                return res.status(400).json(erro);   
             }
+
+            imagemUrl = data;
         }
         
         const restauranteCadastrado = await knex('restaurante')
