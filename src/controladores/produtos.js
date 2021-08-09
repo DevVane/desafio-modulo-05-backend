@@ -41,9 +41,18 @@ async function obterProduto (req, res) {
 
 async function cadastrarProduto (req, res){
     const { restaurante } = req;
-    const { nome, preco, descricao, permiteObservacoes, ativo, nomeImagem, imagem } = req.body;
-    
+    const { nome, preco, descricao, permiteObservacoes, ativo, imagem } = req.body;
+    let { nomeImagem } = req.body;
+
     let imagemUrl;
+    if (!imagem && !nomeImagem) {
+        imagemUrl = "https://cmrhxoylmbmyrjjylqnw.supabase.in/storage/v1/object/public/icubus/default/addFotoProduto.png";
+        nomeImagem = "default/addFotoProduto.png";
+    } else {
+        const idAleatorio = Math.floor(Date.now() * Math.random()).toString(36);
+        nomeImagem = "restaurante" + restaurante.id + "/" + idAleatorio + "-" + nomeImagem;
+    }
+    
     
     try {
         await produtoSquema.validate(req.body);
@@ -92,12 +101,16 @@ async function cadastrarProduto (req, res){
     }
 }
 
-async function editarTudoProduto (req, res) {
+async function editarProduto (req, res) {
     const { restaurante } = req;
     const { id: idProduto } = req.params;
-    const { nome, preco, descricao, permiteObservacoes, ativo, nomeImagem, imagem } = req.body;
+    const { nome, preco, descricao, permiteObservacoes, ativo, imagem } = req.body;
+    let { nomeImagem } = req.body;
 
     let imagemUrl;
+    
+    const idAleatorio = Math.floor(Date.now() * Math.random()).toString(36);
+    nomeImagem = "restaurante" + restaurante.id + "/" + idAleatorio + "-" + nomeImagem;
 
     try {
         await produtoSquema.validate(req.body);
@@ -145,58 +158,6 @@ async function editarTudoProduto (req, res) {
     }
 }
 
-async function editarProduto (req, res) {
-    const { restaurante } = req;
-    const { id: idProduto } = req.params;
-    const { nome, preco, descricao, permiteObservacoes, ativo, nomeImagem, imagem } = req.body;
-
-    let imagemUrl;
-    
-    try {
-        await editarProdutoSquema.validate(req.body);
-
-        const produto = await knex('produto')
-            .where({ restaurante_id: restaurante.id, id: idProduto })
-            .first();
-
-        if (!produto) {
-            return res.status(404).json('Produto não encontrado');
-        }
-
-        if (imagem) {
-            const { erro, data } = await uploadImagem(nomeImagem, imagem);
-            
-            if (!data) {
-                return res.status(400).json(erro);   
-            }
-
-            imagemUrl = data;
-        }
-
-        const valoresAtualizados = {
-            nome,
-            preco,
-            descricao,
-            permite_observacoes: permiteObservacoes,
-            ativo,
-            nome_imagem: nomeImagem,
-            imagem: imagemUrl
-        }
-
-        const produtoAtualizado = await knex('produto')
-            .update(valoresAtualizados)
-            .where({ restaurante_id: restaurante.id, id: idProduto });
-    
-
-        if (!produtoAtualizado) {
-            return res.status(400).json('O produto não foi atualizado');
-        }
-
-        return res.status(200).json('O produto foi atualizado com sucesso');
-    } catch (error) {
-        return res.status(400).json(error.message);
-    }
-}
 
 async function excluirProduto (req, res) {
     const { restaurante } = req;
@@ -297,7 +258,6 @@ module.exports = {
     listarProdutosRestaurante,
     obterProduto,
     cadastrarProduto,
-    editarTudoProduto,
     editarProduto,
     excluirProduto,
     ativarProduto,
