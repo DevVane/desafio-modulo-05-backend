@@ -14,7 +14,7 @@ const usuarioEditarSquema = yup.object().shape({
 
 const restauranteSquema = yup.object().shape({
     nome: yup.string().max(50).required().trim(), 
-    descricao: yup.string().max(100).trim(), 
+    descricao: yup.string().max(100).trim().nullable(), 
     idCategoria: yup.number().integer().positive().required(), 
     taxaEntrega: yup.number().integer().required(), 
     tempoEntregaEmMinutos: yup.number().integer().required(), 
