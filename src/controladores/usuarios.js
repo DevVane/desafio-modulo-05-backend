@@ -5,8 +5,6 @@ const { uploadImagem }= require('../funcoes/upload');
 
 async function cadastrarUsuario(req, res){
     const { nome, email, senha} = req.body;
-
-    let imagemUrl;
     
     try {
         await usuarioSquema.validate(req.body);
@@ -33,9 +31,18 @@ async function cadastrarUsuario(req, res){
             taxaEntrega, 
             tempoEntregaEmMinutos, 
             valorMinimoPedido, 
-            imagem,
-            nomeImagem
+            imagem
         } = req.body.restaurante;
+        let { nomeImagem } = req.body.restaurante;
+
+        let imagemUrl;
+        if (!imagem && !nomeImagem) {
+            imagemUrl = "https://cmrhxoylmbmyrjjylqnw.supabase.in/storage/v1/object/public/icubus/default/semfoto.jpg";
+            nomeImagem = "default/semfoto.jpg";
+        } else {
+            const idAleatorio = Math.floor(Date.now() * Math.random()).toString(36);
+            nomeImagem = "restaurantecadastrado"  + "/" + idAleatorio + "-" + nomeImagem;
+        }
 
         if (imagem) {
             const { erro, data } = await uploadImagem(nomeImagem, imagem);
