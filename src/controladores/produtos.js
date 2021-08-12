@@ -107,11 +107,7 @@ async function editarProduto (req, res) {
     const { nome, preco, descricao, permiteObservacoes, ativo, imagem } = req.body;
     let { nomeImagem } = req.body;
 
-    let imagemUrl;
     
-    const idAleatorio = Math.floor(Date.now() * Math.random()).toString(36);
-    nomeImagem = "restaurante" + restaurante.id + "/" + idAleatorio + "-" + nomeImagem;
-
     try {
         await produtoSquema.validate(req.body);
 
@@ -122,7 +118,13 @@ async function editarProduto (req, res) {
         if (!produto) {
             return res.status(404).json('Produto não encontrado');
         }
+    
+        if(nomeImagem) {
+            const idAleatorio = Math.floor(Date.now() * Math.random()).toString(36);
+            nomeImagem = "restaurante" + restaurante.id + "/" + idAleatorio + "-" + nomeImagem;
+        }
 
+        let imagemUrl;
         if (imagem) {
             const { erro, data } = await uploadImagem(nomeImagem, imagem);
             
