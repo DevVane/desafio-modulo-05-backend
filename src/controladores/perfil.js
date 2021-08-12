@@ -58,9 +58,9 @@ async function atualizarPerfil(req, res){
         let { nomeImagem } = req.body.restaurante;
         if(nomeImagem) {
             const idAleatorio = Math.floor(Date.now() * Math.random()).toString(36);
-            nomeImagem = "restaurante" + restaurante.id + "/" + idAleatorio + "-" + nomeImagem;
+            nomeImagem = "restaurante" + restauranteId + "/" + idAleatorio + "-" + nomeImagem;
         }
-        
+
         let imagemUrl;
         if (imagem) {
             const { erro, data } = await uploadImagem(nomeImagem, imagem);
