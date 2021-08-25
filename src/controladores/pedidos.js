@@ -5,14 +5,23 @@ async function listarPedidosNaoSairamParaEntrega (req, res) {
     const { restaurante } = req;
 
     try {
-        const pedidos = await knex('pedido')
-            .join('cliente', 'pedido.cliente_id', 'cliente.id')
-            .join('endereco', 'endereco.cliente_id', 'cliente.id')
-            .select('pedido.*', 'cliente.nome AS cliente_nome', 'endereco.*')
+        let pedidos = await knex('pedido')
             .where({ restaurante_id: restaurante.id, saiu_para_entrega: false })
             .orderBy('pedido.id', 'desc');
 
-       
+        for (let pedido of pedidos) {
+            pedido.cliente = await knex('pedido')
+            .join('cliente', 'pedido.cliente_id', 'cliente.id')
+            .join('endereco', 'pedido.cliente_id', 'endereco.cliente_id')
+            .select('cliente.nome', 'endereco.cep', 'endereco.endereco', 'endereco.complemento')
+            .where('pedido.id', pedido.id);
+
+            pedido.produtos = await knex('itens_pedido')
+            .join('produto', 'itens_pedido.produto_id', 'produto.id')
+            .select('produto.*', 'itens_pedido.quantidade', 'itens_pedido.preco_total')
+            .where({pedido_id: pedido.id})
+            
+        }
     
 
         return res.status(200).json(pedidos);
