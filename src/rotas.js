@@ -6,6 +6,7 @@ const loginControlador = require('./controladores/login');
 const produtos = require('./controladores/produtos');
 const categorias = require('./controladores/categorias');
 const perfil = require('./controladores/perfil');
+const pedidos = require('./controladores/pedidos');
 
 const rotas = express();
 
@@ -35,7 +36,9 @@ rotas.delete('/produtos/:id', produtos.excluirProduto);
 rotas.post('/produtos/:id/ativar', produtos.ativarProduto);
 rotas.post('/produtos/:id/desativar', produtos.desativarProduto);
 
-
+//pedidos
+rotas.get('/pedidos', pedidos.listarPedidosNaoSairamParaEntrega);
+rotas.post('/pedidos/:id/enviado', pedidos.enviarPedido);
 
 
 

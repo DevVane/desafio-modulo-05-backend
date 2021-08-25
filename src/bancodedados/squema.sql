@@ -1,9 +1,12 @@
-create database icubus;
-
+drop table if exists itens_pedido;
+drop table if exists pedido;
 drop table if exists produto;
 drop table if exists restaurante;
 drop table if exists usuario;
 drop table if exists categoria;
+drop table if exists endereco;
+drop table if exists cliente;
+
 
 create table categoria(
     id serial primary key,
@@ -24,9 +27,9 @@ create table restaurante(
     nome varchar(50) not null,
     descricao varchar(100),
     categoria_id integer not null references categoria(id),
-    taxa_entrega integer not null default 0,
+    taxa_entrega integer not null ,
     tempo_entrega_minutos integer not null default 30,
-    valor_minimo_pedido integer not null default 0,
+    valor_minimo_pedido integer not null,
   	imagem  text default 'https://cmrhxoylmbmyrjjylqnw.supabase.in/storage/v1/object/public/icubus/default/semfoto.jpg',
   	nome_imagem text default 'default/semfoto.jpg'
 );
@@ -46,16 +49,53 @@ create table produto(
 
 insert into categoria(nome, imagem)
 values 
-  ('Diversos', 'https://cdn.pixabay.com/photo/2018/01/08/17/30/mushrooms-3069822_960_720.jpg'),
-  ('Lanches', 'https://cdn.pixabay.com/photo/2021/07/29/18/07/burger-6507710_960_720.jpg'),
-  ('Carnes', 'https://cdn.pixabay.com/photo/2018/02/08/15/02/meat-3139641_960_720.jpg'), 
-  ('Massas', 'https://cdn.pixabay.com/photo/2017/06/01/18/46/cook-2364221_960_720.jpg' ),
-  ('Pizzas', 'https://cdn.pixabay.com/photo/2016/06/08/00/03/pizza-1442946_960_720.jpg'),
-  ('Japonesa', 'https://cdn.pixabay.com/photo/2017/06/29/19/57/sushi-2455981_960_720.jpg'),
-  ('Chinesa', 'https://cdn.pixabay.com/photo/2020/04/01/17/34/char-siu-4992042_960_720.jpg'),
-  ('Mexicano', 'https://cdn.pixabay.com/photo/2016/08/23/08/53/tacos-1613795_960_720.jpg'),
-  ('Brasileira', 'https://cdn.pixabay.com/photo/2020/05/17/14/15/bean-stew-5181831_960_720.jpg'),
-  ('Italiana', 'https://cdn.pixabay.com/photo/2017/03/16/21/11/noodles-2150272_960_720.jpg'),
+  ('Diversos', 'https://cdn.pixabay.com/photo/2013/04/02/21/47/strawberries-99551_960_720.jpg'),
+  ('Lanches', 'https://cdn.pixabay.com/photo/2019/02/19/12/49/a-sandwich-4006766_960_720.jpg'),
+  ('Carnes', 'https://cdn.pixabay.com/photo/2018/03/03/10/10/meat-3195334_960_720.jpg'), 
+  ('Massas', 'https://cdn.pixabay.com/photo/2010/12/13/10/00/pasta-2093_960_720.jpg' ),
+  ('Pizzas', 'https://cdn.pixabay.com/photo/2017/09/23/18/36/meat-2779756_960_720.jpg'),
+  ('Japonesa', 'https://image.freepik.com/foto-gratis/arreglo-tradicional-sushi-japones_23-2148809926.jpg'),
+  ('Chinesa', 'https://i.ibb.co/Lpc9rGf/guioza.png'),
+  ('Mexicano', 'https://i.ibb.co/MfFcJ4x/comida-mexicana.jpg'),
+  ('Brasileira', 'https://i.ibb.co/1GbhPRR/feijoada.jpg'),
+  ('Italiana', 'https://image.freepik.com/foto-gratis/primer-plano-mezcla-pasta_53876-31975.jpg'),
   ('Árabe', 'https://cdn.pixabay.com/photo/2016/09/06/14/24/hummus-1649231_960_720.jpg')
 ;
 
+
+create table cliente(
+    id serial primary key,
+    nome varchar(100) not null,
+    email varchar(100) not null unique,
+    telefone varchar(25),
+    senha text not null
+);
+
+create table endereco(
+    id serial primary key,
+  	cliente_id integer not null references cliente(id),
+    cep varchar(25) not null,
+    complemento varchar(100),
+    endereco varchar(200) not null
+);
+
+
+create table pedido(
+    id serial primary key,
+  	restaurante_id integer references restaurante(id),
+  	cliente_id integer references cliente(id),
+    subtotal integer not null,
+    taxa_entrega integer not null,
+    total integer not null,
+  	saiu_para_entrega boolean default false,
+  	foi_entregue boolean default false
+);
+
+create table itens_pedido(
+    id serial primary key,
+  	pedido_id integer not null references pedido(id),
+  	produto_id integer not null references produto(id),
+    preco integer not null,
+  	quantidade integer not null,
+  	preco_total integer not null
+);
