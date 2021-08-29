@@ -183,6 +183,14 @@ async function excluirProduto (req, res) {
         if (produtoAtivo) {
             return res.status(400).json('Não é possível excluir um produto ativo');
         }
+        
+        const produtoSendoVendido = await knex('itens_pedido')
+            .where({ produto_id: idProduto})
+            .first();
+        
+        if (produtoSendoVendido) {
+            return res.status(400).json('Não é possível excluir um produto que faz parte de um pedido ativo');
+        }
 
         const produtoExcluido = await knex('produto')
             .del()

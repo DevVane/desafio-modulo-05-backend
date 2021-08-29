@@ -19,7 +19,7 @@ async function listarPedidosNaoSairamParaEntrega (req, res) {
             pedido.produtos = await knex('itens_pedido')
             .join('produto', 'itens_pedido.produto_id', 'produto.id')
             .select('produto.*', 'itens_pedido.quantidade', 'itens_pedido.preco_total')
-            .where({pedido_id: pedido.id})
+            .where({pedido_id: pedido.id});
             
         }
     
