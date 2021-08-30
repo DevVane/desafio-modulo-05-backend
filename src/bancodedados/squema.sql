@@ -94,7 +94,7 @@ create table pedido(
 create table itens_pedido(
     id serial primary key,
   	pedido_id integer not null references pedido(id),
-  	produto_id integer not null references produto(id),
+  	produto_id integer references produto(id),
     preco integer not null,
   	quantidade integer not null,
   	preco_total integer not null

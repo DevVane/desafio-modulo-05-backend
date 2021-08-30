@@ -183,13 +183,34 @@ async function excluirProduto (req, res) {
         if (produtoAtivo) {
             return res.status(400).json('Não é possível excluir um produto ativo');
         }
+
+        let pedidosNaoSairamParaEntrega = await knex('pedido')
+            .where({ restaurante_id: restaurante.id, saiu_para_entrega: false})
+            .returning('*');
         
-        const produtoSendoVendido = await knex('itens_pedido')
-            .where({ produto_id: idProduto})
-            .first();
+        for (const pedido of pedidosNaoSairamParaEntrega) {
+            const produtoSendoVendido = await knex('itens_pedido')
+                .where({ pedido_id: pedido.id, produto_id: idProduto})
+                .first();
+
+            if (produtoSendoVendido) {
+                return res.status(400).json('Não é possível excluir um produto que faz parte de um pedido ativo');
+            }
+        }
+
+        let pedidosSairamParaEntrega = await knex('pedido')
+            .where({ restaurante_id: restaurante.id, saiu_para_entrega: true})
+            .returning('*');
         
-        if (produtoSendoVendido) {
-            return res.status(400).json('Não é possível excluir um produto que faz parte de um pedido ativo');
+        for (let pedido of pedidosSairamParaEntrega) {
+            let produtoJaSaiu = await knex('itens_pedido')
+                .where({ pedido_id: pedido.id, produto_id: idProduto})
+                .update({ produto_id: null})
+                .returning('*');
+
+            if (produtoJaSaiu.length === 0) {
+                return res.status(400).json('Algo deu errado');
+            }
         }
 
         const produtoExcluido = await knex('produto')
