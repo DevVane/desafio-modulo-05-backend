@@ -38,6 +38,7 @@ rotas.post('/produtos/:id/desativar', produtos.desativarProduto);
 
 //pedidos
 rotas.get('/pedidos', pedidos.listarPedidosNaoSairamParaEntrega);
+rotas.get('/pedidos/entregues', pedidos.listarPedidosEntregues);
 rotas.post('/pedidos/:id/enviado', pedidos.enviarPedido);
 
 
